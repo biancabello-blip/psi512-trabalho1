@@ -1,0 +1,48 @@
+# =============================================================================
+# PSI512 - Trabalho Avaliativo 1 - Implantacao A (Minikube)
+#
+# Gerador de carga.
+#
+# Substitui o "kubectl run load-generator" do minikube-load-test.sh original.
+# A mudanca de Pod avulso para Deployment tem uma razao: com Deployment o
+# numero de lacos de requisicao concorrentes vira um parametro do experimento
+# ("kubectl scale"), o que permite submeter Minikube e EKS a intensidades
+# equivalentes. Com um unico Pod fixo a carga fica presa ao tempo de ida e
+# volta da rede, que e menor no Minikube (tudo dentro de uma VM) do que no EKS
+# (trafego atravessando a VPC) - a comparacao mediria a rede, e nao o HPA.
+#
+# Unica diferenca em relacao ao manifesto equivalente da Implantacao B: a
+# porta do Service. Aqui o Service expoe 8000 diretamente; no EKS ele expoe 80
+# no balanceador e redireciona para 8000 no container.
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-generator
+  labels:
+    app: load-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-generator
+  template:
+    metadata:
+      labels:
+        app: load-generator
+    spec:
+      containers:
+        - name: load-generator
+          image: busybox:1.36
+          command: ["/bin/sh", "-c"]
+          args:
+            - "while true; do wget -q -O- http://python-web:8000 > /dev/null; done"
+          # Requests declarados para que o scheduler contabilize o gerador na
+          # ocupacao do node em vez de ele competir por CPU de forma invisivel.
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "16Mi"
+            limits:
+              cpu: "500m"
+              memory: "64Mi"

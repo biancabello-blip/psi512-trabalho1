@@ -1,0 +1,40 @@
+# =============================================================================
+# PSI512 - Trabalho Avaliativo 1 - Implantacao B (AWS EKS)
+#
+# Service de exposicao da aplicacao.
+#
+# Diferenca em relacao a Implantacao A: la o Service e do tipo NodePort e o
+# acesso se da por "minikube service", que abre um tunel do host para a VM.
+# Aqui o tipo e LoadBalancer: o cloud controller do EKS traduz este objeto em
+# uma chamada de API da AWS e provisiona um balanceador de carga real, com
+# nome DNS publico e cobranca por hora.
+#
+# Sem o AWS Load Balancer Controller instalado, o tipo LoadBalancer produz um
+# Classic Load Balancer (CLB) pelo caminho legado. E suficiente para o
+# experimento e evita instalar componentes adicionais no cluster.
+#
+# ATENCAO (custo e seguranca): este objeto cria um recurso cobrado por hora e
+# expoe a aplicacao a internet publica, em HTTP, sem TLS e sem autenticacao.
+# Ele DEVE ser removido antes do cluster - ver 99-cleanup.sh. Excluir o
+# cluster sem excluir o Service deixa o balanceador orfao e cobrando.
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-web
+  labels:
+    app: python-web
+spec:
+  type: LoadBalancer
+  # O selector e o unico vinculo entre o Service e os Pods. Nao ha referencia
+  # ao Deployment: qualquer Pod com app=python-web entra automaticamente no
+  # conjunto de endpoints, e e exatamente por isso que os Pods criados pelo
+  # HPA durante o teste de carga passam a receber trafego sem nenhuma acao
+  # adicional.
+  selector:
+    app: python-web
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80          # porta exposta pelo balanceador
+      targetPort: 8000  # porta em que o servidor Python escuta no container
