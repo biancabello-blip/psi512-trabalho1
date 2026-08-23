@@ -1,0 +1,17 @@
+NAME                         READY   STATUS              RESTARTS   AGE
+load-generator               0/1     ContainerCreating   0          1s
+python-web-bb9c997c7-2gpz7   1/1     Running             0          6s
+python-web-bb9c997c7-c8ctn   1/1     Running             0          27m
+load-generator               1/1     Running             0          2s
+python-web-bb9c997c7-dbrrq   0/1     Pending             0          0s
+python-web-bb9c997c7-82f4v   0/1     Pending             0          0s
+python-web-bb9c997c7-dbrrq   0/1     Pending             0          0s
+python-web-bb9c997c7-82f4v   0/1     Pending             0          0s
+python-web-bb9c997c7-dbrrq   0/1     ContainerCreating   0          0s
+python-web-bb9c997c7-82f4v   0/1     ContainerCreating   0          0s
+python-web-bb9c997c7-dbrrq   1/1     Running             0          2s
+python-web-bb9c997c7-82f4v   1/1     Running             0          2s
+python-web-bb9c997c7-mq8cd   0/1     Pending             0          0s
+python-web-bb9c997c7-mq8cd   0/1     Pending             0          0s
+python-web-bb9c997c7-mq8cd   0/1     ContainerCreating   0          0s
+python-web-bb9c997c7-mq8cd   1/1     Running             0          2s
