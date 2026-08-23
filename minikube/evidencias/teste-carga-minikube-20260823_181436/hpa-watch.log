@@ -1,0 +1,13 @@
+NAME             REFERENCE               TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+python-web-hpa   Deployment/python-web   cpu: 2%/10%   1         5         2          2m15s
+python-web-hpa   Deployment/python-web   cpu: 161%/10%   1         5         2          4m
+python-web-hpa   Deployment/python-web   cpu: 161%/10%   1         5         4          4m15s
+python-web-hpa   Deployment/python-web   cpu: 161%/10%   1         5         5          4m30s
+python-web-hpa   Deployment/python-web   cpu: 172%/10%   1         5         5          5m
+python-web-hpa   Deployment/python-web   cpu: 140%/10%   1         5         5          6m
+python-web-hpa   Deployment/python-web   cpu: 142%/10%   1         5         5          7m
+python-web-hpa   Deployment/python-web   cpu: 143%/10%   1         5         5          8m
+python-web-hpa   Deployment/python-web   cpu: 69%/10%    1         5         5          9m
+python-web-hpa   Deployment/python-web   cpu: 2%/10%     1         5         5          10m
+python-web-hpa   Deployment/python-web   cpu: 2%/10%     1         5         5          14m
+python-web-hpa   Deployment/python-web   cpu: 2%/10%     1         5         1          15m

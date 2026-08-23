@@ -1,12 +1,33 @@
+# =============================================================================
+# PSI512 - Trabalho Avaliativo 1 - Implantacao A (Minikube)
+#
+# Service de exposicao da aplicacao.
+#
+# NodePort abre a mesma porta alta (30000-32767) em todos os nodes do cluster.
+# No Minikube ha um unico node - a propria VM - e o acesso a partir do host se
+# da por "minikube service python-web", que estabelece um tunel ate essa porta.
+#
+# Na Implantacao B este objeto vira type: LoadBalancer, e o cloud controller do
+# EKS o traduz em um balanceador de carga real da AWS, com nome DNS publico e
+# cobranca por hora. Comparar os dois arquivos e comparar as duas formas de
+# expor a mesma aplicacao.
+# =============================================================================
 apiVersion: v1
 kind: Service
 metadata:
   name: python-web
 spec:
   type: NodePort
+  # Selecao por label: o Service nao conhece o Deployment nem os nomes dos
+  # Pods. Os Pods criados pelo HPA durante o teste de carga entram no conjunto
+  # de endpoints sem nenhuma acao adicional.
   selector:
     app: python-web
   ports:
     - protocol: TCP
+      # Porta do Service dentro do cluster. E este nome:porta
+      # (http://python-web:8000) que o gerador de carga usa, resolvido pelo
+      # CoreDNS.
       port: 8000
+      # Porta em que o servidor Python escuta dentro do container.
       targetPort: 8000

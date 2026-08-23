@@ -1,8 +1,24 @@
+# =============================================================================
+# PSI512 - Trabalho Avaliativo 1 - Implantacao A (Minikube)
+#
+# Deployment + HorizontalPodAutoscaler da aplicacao web em Python.
+#
+# Os parametros que governam o comportamento do HPA - requests/limits de CPU,
+# minReplicas, maxReplicas e averageUtilization - sao os mesmos usados na
+# Implantacao B (eks/10-deployment.yaml). Essa igualdade e condicao para que a
+# analise comparativa do artigo seja valida: se os alvos divergissem, as
+# diferencas observadas entre os ambientes nao poderiam ser atribuidas ao
+# ambiente.
+# =============================================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: python-web
 spec:
+  # Valor inicial de replicas. O HPA assume o controle deste campo assim que
+  # obtem a primeira metrica, portanto ele so vale para o instante seguinte ao
+  # apply - e por isso que, poucos minutos apos a implantacao e sem carga, o
+  # numero de Pods cai para 1 (minReplicas).
   replicas: 2
   selector:
     matchLabels:
@@ -10,28 +26,60 @@ spec:
   template:
     metadata:
       labels:
+        # Este label e o unico vinculo com o Service e com o HPA. Nao ha
+        # referencia por nome ou IP: qualquer Pod que carregue app=python-web
+        # passa a receber trafego automaticamente - inclusive os criados pelo
+        # HPA durante o teste de carga.
         app: python-web
     spec:
       containers:
         - name: python-web
+          # Imagem construida localmente pelo deploy-minikube.sh, dentro do
+          # daemon Docker da propria VM do Minikube (minikube docker-env).
           image: python-web:1.0
+          # "Never" impede o kubelet de procurar a imagem em um registro
+          # remoto. E o que permite trabalhar sem Docker Hub nem ECR - e e
+          # tambem a linha que NAO pode ser reaproveitada na Implantacao B,
+          # onde cada node e uma instancia EC2 sem acesso ao daemon local.
           imagePullPolicy: Never
           ports:
             - containerPort: 8000
           resources:
+            # requests.cpu e o denominador do calculo de utilizacao do HPA:
+            # "100%" significa consumo igual a 50m, e nao um core inteiro. Com
+            # o alvo em 10%, o gatilho ocorre em apenas 5m de CPU por Pod, o
+            # que torna o escalonamento visivel em segundos - escolha
+            # deliberada para o experimento.
             requests:
               cpu: "50m"
               memory: "32Mi"
+            # limits.cpu limita cada Pod a 250m (1/4 de core). E o teto que
+            # impede um unico Pod de absorver toda a carga e forca a demanda a
+            # se distribuir entre replicas.
             limits:
               cpu: "250m"
               memory: "128Mi"
 
 ---
+# -----------------------------------------------------------------------------
+# HorizontalPodAutoscaler
+#
+# Usa a API autoscaling/v2, que admite metricas multiplas e politicas de
+# comportamento; aqui apenas CPU e utilizada.
+#
+# O HPA nao mede CPU sozinho: ele consulta a API metrics.k8s.io, fornecida
+# pelo metrics-server. No Minikube isso e um addon (habilitado pelo
+# deploy-minikube.sh); no EKS o componente precisa ser instalado a mao. Sem
+# ele o HPA permanece em "cpu: <unknown>/10%" e nunca escala.
+# -----------------------------------------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: python-web-hpa
 spec:
+  # O HPA aponta para o Deployment, e nao para os Pods: quem altera o numero
+  # de replicas e o controlador do Deployment, a partir do valor que o HPA
+  # escreve em spec.replicas.
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
@@ -44,4 +92,7 @@ spec:
         name: cpu
         target:
           type: Utilization
+          # Percentual sobre requests.cpu (50m), nao sobre a capacidade do
+          # node. Valor baixo de proposito, para que o escalonamento ocorra
+          # dentro da janela de observacao do experimento.
           averageUtilization: 10

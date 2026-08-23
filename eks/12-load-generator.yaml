@@ -1,0 +1,55 @@
+# =============================================================================
+# PSI512 - Trabalho Avaliativo 1 - Implantacao B (AWS EKS)
+#
+# Gerador de carga.
+#
+# A Implantacao A usa um unico Pod busybox criado com "kubectl run", em laco
+# infinito de wget. Aqui o mesmo gerador e declarado como Deployment para que
+# a intensidade da carga seja um parametro do experimento: o numero de
+# replicas define quantos lacos de requisicao concorrentes existem, e pode ser
+# alterado durante o teste com "kubectl scale".
+#
+# Isso importa porque o servidor da aplicacao (http.server do Python) e
+# single-thread: cada Pod atende uma requisicao por vez. Com um unico gerador
+# a carga fica limitada pelo tempo de ida e volta da rede, e no EKS - onde o
+# trafego atravessa a VPC - esse tempo e maior do que no Minikube, onde tudo
+# ocorre dentro de uma unica VM. Poder aumentar o numero de geradores permite
+# submeter os dois ambientes a uma demanda equivalente.
+#
+# O alvo e o nome DNS interno do Service (python-web), resolvido pelo CoreDNS.
+# A carga NAO passa pelo balanceador publico: entra direto pelo ClusterIP.
+# Isso e proposital - o objeto de estudo e o HPA, e nao o balanceador, e assim
+# a medida nao inclui latencia de internet nem custo de trafego de saida.
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-generator
+  labels:
+    app: load-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-generator
+  template:
+    metadata:
+      labels:
+        app: load-generator
+    spec:
+      containers:
+        - name: load-generator
+          image: busybox:1.36
+          command: ["/bin/sh", "-c"]
+          args:
+            - "while true; do wget -q -O- http://python-web:80 > /dev/null; done"
+          # O gerador tem requests proprios para que o scheduler o considere na
+          # ocupacao do node. Sem isso ele competiria por CPU com os Pods da
+          # aplicacao sem aparecer na contabilidade do cluster.
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "16Mi"
+            limits:
+              cpu: "500m"
+              memory: "64Mi"

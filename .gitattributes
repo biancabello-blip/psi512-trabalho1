@@ -1,0 +1,24 @@
+# =============================================================================
+# PSI512 - Trabalho Avaliativo 1
+#
+# Normaliza as quebras de linha no repositorio. Sem isto, arquivos editados no
+# Windows (CRLF) e no Linux (LF) aparecem como totalmente reescritos no diff,
+# ainda que apenas uma linha tenha mudado - o que atrapalha a revisao.
+#
+# text=auto : o git armazena LF no repositorio e entrega ao checkout a
+#             convencao nativa de cada sistema.
+# =============================================================================
+* text=auto
+
+# Scripts de shell SEMPRE com LF, inclusive no checkout em Windows. Um \r no
+# fim da linha do shebang faz o interpretador ser procurado como "/bin/bash\r"
+# e o script falha com "bad interpreter" ao rodar no Linux ou no container.
+*.sh text eol=lf
+
+# Manifestos e Dockerfile idem: sao lidos por ferramentas que rodam em Linux.
+*.yaml text eol=lf
+*.yml  text eol=lf
+Dockerfile text eol=lf
+
+# Binarios: nunca normalizar.
+*.png binary
