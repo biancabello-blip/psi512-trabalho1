@@ -137,34 +137,14 @@ kubectl describe hpa "${HPA_NAME}"        > "${OUT}/hpa-describe.txt"    2>&1
 kubectl get pods -o wide                  > "${OUT}/estado-final.txt"    2>&1
 kubectl get events --sort-by=.lastTimestamp | tail -60 > "${OUT}/eventos-cluster.txt" 2>&1
 
+# A analise dos numeros fica em resumo.sh, que pode ser reexecutado sobre um
+# metricas.csv ja coletado - util para refazer contas sem repetir um
+# experimento que, no EKS, tem custo.
 {
-  echo "=== RESUMO - ambiente: ${AMBIENTE} ==="
-  echo "Inicio (UTC) .....: $(date -u -d "@${INICIO}" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo "${INICIO}")"
-  echo "Fases ............: repouso ${T_REPOUSO}s | carga ${T_CARGA}s | recuperacao ${T_RECUP}s"
-  echo "Geradores ........: ${N_GEN}"
-  echo "Nodes ............: $(kubectl get nodes --no-headers | wc -l)"
+  "$(dirname "${BASH_SOURCE[0]}")/resumo.sh" "${CSV}" "${AMBIENTE}" "${T_REPOUSO}" "${T_CARGA}" "${N_GEN}"
   echo
-  # Tempos de reacao extraidos do CSV por subtracao em relacao ao fim da fase
-  # de repouso (instante em que a carga passa a existir).
-  awk -F, -v tr="${T_REPOUSO}" -v tc="${T_CARGA}" 'NR>1 {
-      c=($3=="NA")?0:$3+0
-      if (c>cpumax) cpumax=c
-      if ($6+0>repmax) repmax=$6+0
-      if ($1<tr && $6+0>base) base=$6+0
-      if (up=="" && $1>=tr && $6+0>base) up=$1
-      if (up!="" && top=="" && $6+0==repmax) top=$1
-      if ($1>=tr+tc && down=="" && $6+0<repmax) down=$1
-      ult=$6+0; ultp=$7+0
-    } END {
-      printf "Replicas na linha de base ........: %d\n", base
-      printf "CPU maxima observada .............: %d%% do request\n", cpumax
-      printf "Replicas maximas .................: %d\n", repmax
-      printf "Replicas / Pods prontos ao final .: %d / %d\n", ult, ultp
-      if (up!="")   printf "Tempo ate a 1a expansao ..........: %d s apos o inicio da carga\n", up-tr
-      if (top!="")  printf "Tempo ate o maximo ...............: %d s apos o inicio da carga\n", top-tr
-      if (down!="") printf "Tempo ate a 1a reducao ...........: %d s apos a remocao da carga\n", down-(tr+tc)
-      else          printf "Tempo ate a 1a reducao ...........: nao ocorreu na janela observada\n"
-    }' "${CSV}"
+  echo "Nodes ............: $(kubectl get nodes --no-headers | wc -l)"
+  echo "Inicio (UTC) .....: $(date -u -d "@${INICIO}" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo "${INICIO}")"
   echo
   echo "Arquivos: metricas.csv (serie temporal) | hpa-describe.txt (motivos)"
   echo "          hpa-watch.log | pods-watch.log | eventos.log | estado-*.txt"

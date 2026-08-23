@@ -1,0 +1,12 @@
+NAME                                                 REFERENCE               TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/python-web-hpa   Deployment/python-web   cpu: 2%/10%   1         5         2          2m14s
+
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES           SELECTOR
+deployment.apps/python-web   2/2     2            2           2m14s   python-web   python-web:1.0   app=python-web
+
+NAME                             READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
+pod/python-web-bb9c997c7-gcc2w   1/1     Running   0          2m14s   10.244.0.5   minikube   <none>           <none>
+pod/python-web-bb9c997c7-pf28t   1/1     Running   0          2m14s   10.244.0.4   minikube   <none>           <none>
+
+NAME            STATUS   ROLES           AGE    VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION    CONTAINER-RUNTIME
+node/minikube   Ready    control-plane   4m1s   v1.35.1   192.168.58.2   <none>        Debian GNU/Linux 12 (bookworm)   7.1.4-1-cachyos   docker://29.2.1

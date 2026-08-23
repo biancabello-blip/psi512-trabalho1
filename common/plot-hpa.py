@@ -78,6 +78,11 @@ def main():
         rotulo = Path(arquivo).parent.name.replace("teste-carga-", "")
         desenhar(ax, t, cpu, rep, prontos, alvo, rotulo, *cores[i % 2])
 
+    # Folga no topo do eixo de CPU para a legenda nao cobrir a curva.
+    picos = [v for v in ax.get_lines()[0].get_ydata() if v is not None]
+    if picos:
+        ax.set_ylim(0, max(picos) * 1.45)
+
     ax.set_xlabel("tempo desde o início do experimento (min)")
     ax.set_ylabel("CPU (% do request)")
     ax._psi_twin.set_ylabel("número de Pods")

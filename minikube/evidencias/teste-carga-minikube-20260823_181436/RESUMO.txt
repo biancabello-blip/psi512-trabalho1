@@ -1,0 +1,23 @@
+=== RESUMO - ambiente: minikube ===
+Fases ......................: repouso 60s | carga 300s
+Geradores de carga .........: 2
+
+Replicas na linha de base ..........: 2
+CPU maxima observada ...............: 172% do request
+Replicas maximas decididas pelo HPA : 5
+Pods prontos no pico ...............: 5
+
+-- Subida (referencia: inicio da carga) --
+Decisao de expandir ................: 48 s
+Decisao de ir ao maximo ............: 64 s
+Pods prontos no maximo .............: 64 s
+  -> custo do substrato (prontos - decisao): < 5 s (abaixo da resolucao de amostragem)
+
+-- Descida (referencia: remocao da carga) --
+Decisao de reduzir .................: 395 s
+
+Estado na ultima amostra ...........: 1 replicas decididas, 5 Pods ainda prontos
+  (Pods em Terminating continuam prontos por alguns segundos apos a decisao de reduzir)
+
+Nodes ............: 1
+Inicio (UTC) .....: 2026-08-23T21:14:36Z
