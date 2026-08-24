@@ -23,7 +23,10 @@ cd "$(dirname "$0")"
 
 export AMBIENTE="minikube"
 export MANIFEST_GEN="./12-load-generator.yaml"
-export EVID_DIR="${EVID_DIR:-$(pwd)/evidencias}"
+# Cada aluno grava na sua propria pasta: o enunciado exige execucao e
+# validacao individuais, e sem o nome no caminho nao ha como atribuir uma
+# execucao a quem a fez. ALUNO cai no usuario do sistema se nao for informado.
+export EVID_DIR="${EVID_DIR:-$(pwd)/evidencias/${ALUNO:-$(id -un)}}"
 export HPA_NAME="python-web-hpa"
 export APP_LABEL="app=python-web"
 

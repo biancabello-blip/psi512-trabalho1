@@ -35,4 +35,5 @@ export ECR_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO
 export IMAGE="${ECR_URI}:${IMAGE_TAG}"
 
 # Diretorio raiz das evidencias.
-export EVID_DIR="${EVID_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/evidencias}"
+# Mesma regra da Implantacao A: uma pasta por aluno.
+export EVID_DIR="${EVID_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/evidencias/${ALUNO:-$(id -un)}}"

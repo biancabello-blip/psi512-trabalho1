@@ -112,7 +112,7 @@ não misturar com as dos colegas:
 
 ```bash
 cd minikube
-EVID_DIR=$PWD/evidencias/SEU-NOME ./20-load-test.sh 60 300 420 2
+ALUNO=seunome ./20-load-test.sh 60 300 420 2
 ```
 
 Os quatro números são repouso, carga, recuperação (em segundos) e quantidade de
@@ -124,7 +124,7 @@ resumo com os tempos de reação. Gráfico:
 
 ```bash
 cd ..
-common/plot-hpa.py minikube/evidencias/SEU-NOME/teste-carga-minikube-*/metricas.csv
+common/plot-hpa.py minikube/evidencias/seunome/teste-carga-minikube-*/metricas.csv
 ```
 
 Encerrando o cluster local (a qualquer momento, sem custo pendente):
@@ -192,7 +192,7 @@ cd eks
 # evidências aqui. Se você exportar só na hora do teste de carga, as
 # evidências das etapas anteriores caem na pasta padrão e se misturam com as
 # dos colegas.
-export EVID_DIR=$PWD/evidencias/SEU-NOME
+export ALUNO=seunome
 ```
 
 ### 4.1 Publicar a imagem no ECR — ~2 min
@@ -271,8 +271,8 @@ consegue produzir, porque tem um node só.
 ```bash
 cd ..
 common/plot-hpa.py \
-  minikube/evidencias/SEU-NOME/teste-carga-minikube-*/metricas.csv \
-  eks/evidencias/SEU-NOME/teste-carga-eks-*/metricas.csv \
+  minikube/evidencias/seunome/teste-carga-minikube-*/metricas.csv \
+  eks/evidencias/seunome/teste-carga-eks-*/metricas.csv \
   --comparar comparativo.png
 ```
 
@@ -326,7 +326,7 @@ testes. Mínimo por pessoa:
 - [ ] verificação final de limpeza, com todas as listas vazias
 
 Os arquivos gerados pelos scripts (`metricas.csv`, `RESUMO.txt`,
-`hpa-describe.txt`, logs) ficam em `evidencias/SEU-NOME/` e devem ser
+`hpa-describe.txt`, logs) ficam em `evidencias/<seu-nome>/` e devem ser
 commitados — são parte da entrega.
 
 ### Executando na mesma conta
