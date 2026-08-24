@@ -353,6 +353,32 @@ metrics-server`. No EKS: `./02-metrics-server.sh`. Nos dois casos, espere ~1
 minuto após o componente ficar `Ready` — ele precisa coletar a primeira janela
 de amostras antes de publicar qualquer valor.
 
+### `failed to connect to the docker API ... /var/run/docker.sock`
+
+O daemon do Docker não está rodando — acontece tipicamente depois de um
+reinício, já que em várias distribuições o serviço não vem habilitado:
+
+```bash
+sudo systemctl start docker          # inicia agora
+sudo systemctl enable --now docker   # e também nos próximos boots
+```
+
+### `aws configure` responde `EOF when reading a line`
+
+O comando é interativo e não funciona quando a entrada não é um terminal
+(dentro de script, pipe ou prompt de agente). Duas saídas:
+
+```bash
+aws login          # credenciais TEMPORÁRIAS pela sessão do console (preferível)
+```
+
+ou gravando o arquivo diretamente, sem passar pelo comando interativo — ver
+a [seção 3](#3-credenciais-aws).
+
+O `aws login` é preferível: não deixa chave estática em disco e expira
+sozinho. Se a sessão vencer no meio do percurso, rode-o de novo e continue do
+script onde parou — todos são idempotentes.
+
 ### `ErrImageNeverPull` no Minikube
 
 A imagem foi construída no daemon do host, não no da VM. O `deploy-minikube.sh`
