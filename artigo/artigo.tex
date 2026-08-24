@@ -206,6 +206,32 @@ Provisionamento & [PREENCHER] s & [PREENCHER] min & VPC, IAM, plano de controle,
 % RESPONSAVEL: Franco
 % ALVO: 2,0 paginas  <- MAIOR SECAO, e a que responde ao enunciado
 % FONTES: RESUMO.txt e metricas.csv de cada implantacao
+%
+% ACHADO CENTRAL, e o que da substancia a esta secao:
+%
+% O tempo de reducao NAO e "300 s de janela + atraso do controlador". Ele se
+% decompoe em duas parcelas de naturezas diferentes:
+%
+%   1. ATRASO DO PIPELINE DE METRICAS. Removida a carga em t=360 s, a CPU
+%      relatada pela API metrics.k8s.io continuou alta por mais 104 s no
+%      minikube e 81 s no EKS. O kubelet/metrics-server reporta uma media
+%      sobre uma janela; enquanto amostras antigas nao envelhecem, o HPA
+%      "ve" carga que ja nao existe. Ver no metricas.csv o degrau
+%      116 -> 95 -> 2 (minikube) e 161 -> 108 -> 2 (EKS).
+%
+%   2. JANELA DE ESTABILIZACAO. Contada a partir do instante em que a CPU
+%      volta ao alvo, a reducao ocorre em 284 s (minikube) e 280 s (EKS) --
+%      as duas compativeis com os 300 s padrao, dentro da resolucao de
+%      amostragem.
+%
+% CONSEQUENCIA: a diferenca de 27 s no tempo de reducao entre os ambientes
+% (388 vs 361) e explicada quase inteiramente pela diferenca de atraso do
+% pipeline de metricas (104 vs 81 = 23 s), e NAO por comportamento distinto
+% do controlador. O HPA se comporta igual nos dois; o que difere e a rapidez
+% com que cada substrato lhe conta a verdade sobre a carga.
+%
+% Esta e a afirmacao mais defensavel do trabalho, porque nao depende de as
+% cargas terem sido equivalentes (nao foram -- ver Secao 4).
 % =============================================================================
 \section{Resultados e análise comparativa}
 
@@ -237,13 +263,18 @@ Provisionamento & [PREENCHER] s & [PREENCHER] min & VPC, IAM, plano de controle,
 \textbf{Medida} & \textbf{A -- Minikube} & \textbf{B -- EKS} \\
 \midrule
 Réplicas na linha de base            & 2      & 2 \\
-CPU máxima observada (\% do request) & 172\%  & 385\% \\
+CPU máxima observada (\% do request) & 223\%  & 385\% \\
 Réplicas máximas decididas           & 5      & 5 \\
-Decisão de expandir                  & 48\,s  & 35\,s \\
-Decisão de ir ao máximo              & 64\,s  & 52\,s \\
-Pods prontos no máximo               & 64\,s  & 52\,s \\
-Custo do substrato                   & $<$5\,s & $<$5\,s \\
-Decisão de reduzir                   & 395\,s & 361\,s \\
+Decisão de expandir                  & 46\,s  & 35\,s \\
+Decisão de ir ao máximo              & 56\,s  & 52\,s \\
+Pods prontos no máximo               & 62\,s  & 52\,s \\
+Custo do substrato                   & 6\,s   & $<$5\,s \\
+Decisão de reduzir                   & 388\,s & 361\,s \\
+\midrule
+\multicolumn{3}{@{}l@{}}{\textit{Decomposição do tempo de redução:}} \\
+Atraso do \textit{pipeline} de métricas & 104\,s & 81\,s \\
+Janela de estabilização efetiva      & 284\,s & 280\,s \\
+\midrule
 Nodes                                & 1      & 2   \\
 \bottomrule
 \end{tabular}

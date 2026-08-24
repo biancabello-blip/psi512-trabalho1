@@ -1,0 +1,54 @@
+NAME                         READY   STATUS    RESTARTS        AGE
+python-web-bb9c997c7-g4ztq   1/1     Running   1 (2m38s ago)   18h
+python-web-bb9c997c7-mglzx   1/1     Running   0               2m10s
+load-generator-6f4bc99855-q2n8n   0/1     Pending   0               0s
+load-generator-6f4bc99855-q2n8n   0/1     Pending   0               0s
+load-generator-6f4bc99855-q2n8n   0/1     ContainerCreating   0               0s
+load-generator-6f4bc99855-k9956   0/1     Pending             0               0s
+load-generator-6f4bc99855-k9956   0/1     Pending             0               0s
+load-generator-6f4bc99855-k9956   0/1     ContainerCreating   0               0s
+load-generator-6f4bc99855-q2n8n   1/1     Running             0               1s
+load-generator-6f4bc99855-k9956   1/1     Running             0               1s
+python-web-bb9c997c7-mfnb2        0/1     Pending             0               0s
+python-web-bb9c997c7-qg2gj        0/1     Pending             0               0s
+python-web-bb9c997c7-mfnb2        0/1     Pending             0               0s
+python-web-bb9c997c7-qg2gj        0/1     Pending             0               0s
+python-web-bb9c997c7-mfnb2        0/1     ContainerCreating   0               0s
+python-web-bb9c997c7-qg2gj        0/1     ContainerCreating   0               0s
+python-web-bb9c997c7-qg2gj        1/1     Running             0               2s
+python-web-bb9c997c7-mfnb2        1/1     Running             0               2s
+python-web-bb9c997c7-8r2v5        0/1     Pending             0               0s
+python-web-bb9c997c7-8r2v5        0/1     Pending             0               0s
+python-web-bb9c997c7-8r2v5        0/1     ContainerCreating   0               0s
+python-web-bb9c997c7-8r2v5        1/1     Running             0               2s
+load-generator-6f4bc99855-k9956   1/1     Terminating         0               5m
+load-generator-6f4bc99855-q2n8n   1/1     Terminating         0               5m
+load-generator-6f4bc99855-k9956   1/1     Terminating         0               5m
+load-generator-6f4bc99855-q2n8n   1/1     Terminating         0               5m
+load-generator-6f4bc99855-k9956   0/1     Error               0               5m31s
+load-generator-6f4bc99855-q2n8n   0/1     Error               0               5m31s
+load-generator-6f4bc99855-q2n8n   0/1     Error               0               5m31s
+load-generator-6f4bc99855-q2n8n   0/1     Error               0               5m31s
+load-generator-6f4bc99855-k9956   0/1     Error               0               5m31s
+load-generator-6f4bc99855-k9956   0/1     Error               0               5m31s
+python-web-bb9c997c7-8r2v5        1/1     Terminating         0               10m
+python-web-bb9c997c7-mglzx        1/1     Terminating         0               14m
+python-web-bb9c997c7-g4ztq        1/1     Terminating         1 (15m ago)     18h
+python-web-bb9c997c7-qg2gj        1/1     Terminating         0               10m
+python-web-bb9c997c7-8r2v5        1/1     Terminating         0               10m
+python-web-bb9c997c7-g4ztq        1/1     Terminating         1 (15m ago)     18h
+python-web-bb9c997c7-mglzx        1/1     Terminating         0               14m
+python-web-bb9c997c7-qg2gj        1/1     Terminating         0               10m
+python-web-bb9c997c7-8r2v5        0/1     Error               0               11m
+python-web-bb9c997c7-mglzx        0/1     Error               0               15m
+python-web-bb9c997c7-qg2gj        0/1     Error               0               11m
+python-web-bb9c997c7-8r2v5        0/1     Error               0               11m
+python-web-bb9c997c7-8r2v5        0/1     Error               0               11m
+python-web-bb9c997c7-g4ztq        0/1     Error               1 (15m ago)     18h
+python-web-bb9c997c7-qg2gj        0/1     Error               0               11m
+python-web-bb9c997c7-qg2gj        0/1     Error               0               11m
+python-web-bb9c997c7-g4ztq        0/1     Error               1               18h
+python-web-bb9c997c7-mglzx        0/1     Error               0               15m
+python-web-bb9c997c7-mglzx        0/1     Error               0               15m
+python-web-bb9c997c7-g4ztq        0/1     Error               1               18h
+python-web-bb9c997c7-g4ztq        0/1     Error               1               18h
