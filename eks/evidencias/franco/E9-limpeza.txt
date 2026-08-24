@@ -1,0 +1,9 @@
+--- clusters EKS ---
+--- instancias EC2 em execucao ---
+--- balanceadores classic ---
+--- balanceadores v2 (ALB/NLB) ---
+--- volumes EBS disponiveis ---
+--- repositorios ECR ---
+--- pilhas CloudFormation ativas ---
+--- roles IAM do trabalho ---
+--- instance profiles do trabalho ---
