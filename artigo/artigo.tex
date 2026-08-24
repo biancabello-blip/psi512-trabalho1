@@ -142,7 +142,7 @@
 \textbf{Aspecto} & \textbf{A -- Minikube} & \textbf{B -- Amazon EKS} & \textbf{Motivo} \\
 \midrule
 Imagem & daemon da VM, \texttt{imagePullPolicy: Never} & Amazon ECR & cada node é uma instância EC2 sem acesso ao daemon local \\
-Métricas & \textit{addon} de uma linha & manifesto oficial aplicado à mão & o EKS não instala o \textit{metrics-server} \\
+Métricas & \textit{addon} de uma linha & \textit{addon} gerenciado, já presente & ambos entregam o \textit{metrics-server} pronto; a documentação citada descreve instalação manual \\
 Exposição & NodePort + túnel & LoadBalancer $\rightarrow$ CLB público & não há host único para tunelar \\
 Nodes & 1 & 2 $\times$ \texttt{t3.medium} & permite observar distribuição de Pods \\
 Custo & zero & [PREENCHER] US\$/h & plano de controle + EC2 + EBS + balanceador \\
@@ -181,6 +181,25 @@ Provisionamento & [PREENCHER] s & [PREENCHER] min & VPC, IAM, plano de controle,
 %                                                        SUBSTRATO (agendamento,
 %                                                        imagem, partida)
 %  - parametros identicos nas duas execucoes: 60 300 420 2.
+%
+%  - LIMITACOES, que precisam ser declaradas AQUI e nao escondidas:
+%
+%    (a) RESOLUCAO TEMPORAL DESIGUAL. O amostrador pede 5 s entre coletas, mas
+%        cada iteracao faz tres chamadas a API. Contra o plano de controle
+%        remoto do EKS isso custou ~8-9 s por amostra, contra ~5 s no minikube.
+%        Logo, diferencas menores que ~9 s entre os dois ambientes NAO sao
+%        distinguiveis, e nenhuma afirmacao da Secao 5 pode se apoiar nelas.
+%
+%    (b) A CARGA NOMINAL IGUAL NAO PRODUZIU CARGA EFETIVA IGUAL. Os dois
+%        ambientes receberam 2 geradores, mas no minikube os 4 Pods (2
+%        geradores + 2 servidores) disputam os cores da UNICA VM, enquanto no
+%        EKS os geradores rodam em nodes separados, com CPU de duas maquinas
+%        por tras. Dai a CPU de pico ter sido 385% do request no EKS contra
+%        172% no minikube. Como o HPA reage ao EXCESSO sobre o alvo
+%        (desejado = ceil(atual x utilizacao/alvo)), o EKS saltou ao teto mais
+%        cedo. Portanto os tempos absolutos dos dois ambientes NAO sao
+%        comparaveis entre si; o que se compara com seguranca e a ASSIMETRIA
+%        subida/descida dentro de cada ambiente. Ver Secao 6.
 
 % =============================================================================
 % SECAO 5 -- RESULTADOS E ANALISE COMPARATIVA
@@ -217,14 +236,14 @@ Provisionamento & [PREENCHER] s & [PREENCHER] min & VPC, IAM, plano de controle,
 \toprule
 \textbf{Medida} & \textbf{A -- Minikube} & \textbf{B -- EKS} \\
 \midrule
-Réplicas na linha de base            & 2      & [ ] \\
-CPU máxima observada (\% do request) & 172\%  & [ ] \\
-Réplicas máximas decididas           & 5      & [ ] \\
-Decisão de expandir                  & 48\,s  & [ ] \\
-Decisão de ir ao máximo              & 64\,s  & [ ] \\
-Pods prontos no máximo               & 64\,s  & [ ] \\
-Custo do substrato                   & $<$5\,s & [ ] \\
-Decisão de reduzir                   & 395\,s & [ ] \\
+Réplicas na linha de base            & 2      & 2 \\
+CPU máxima observada (\% do request) & 172\%  & 385\% \\
+Réplicas máximas decididas           & 5      & 5 \\
+Decisão de expandir                  & 48\,s  & 35\,s \\
+Decisão de ir ao máximo              & 64\,s  & 52\,s \\
+Pods prontos no máximo               & 64\,s  & 52\,s \\
+Custo do substrato                   & $<$5\,s & $<$5\,s \\
+Decisão de reduzir                   & 395\,s & 361\,s \\
 Nodes                                & 1      & 2   \\
 \bottomrule
 \end{tabular}
