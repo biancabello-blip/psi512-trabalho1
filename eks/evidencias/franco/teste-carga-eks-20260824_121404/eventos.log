@@ -1,0 +1,6 @@
+2026-08-24T15:14:06Z | FASE 1/3 repouso (60s) - linha de base
+2026-08-24T15:15:06Z | FASE 2/3 carga (300s) - aplicando 2 gerador(es)
+2026-08-24T15:15:09Z | carga ativa
+2026-08-24T15:20:09Z | FASE 3/3 recuperacao (420s) - removendo a carga
+2026-08-24T15:20:10Z | carga removida
+2026-08-24T15:27:10Z | FIM

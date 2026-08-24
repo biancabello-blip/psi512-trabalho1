@@ -1,0 +1,113 @@
+# =============================================================================
+# PSI512 - Trabalho Avaliativo 1 - Implantacao B (AWS EKS)
+#
+# Deployment + HorizontalPodAutoscaler da aplicacao web em Python.
+#
+# Este arquivo e o equivalente, para o cluster gerenciado da AWS, do
+# deployment.yaml usado na Implantacao A (Minikube). Os parametros que
+# influenciam o comportamento do HPA - requests/limits de CPU, minReplicas,
+# maxReplicas e averageUtilization - foram mantidos IDENTICOS aos da
+# Implantacao A. Sem essa igualdade os dois ambientes nao seriam comparaveis
+# e a analise do artigo perderia validade.
+#
+# Duas diferencas em relacao a Implantacao A, ambas obrigatorias:
+#   1. image  -> aponta para o Amazon ECR e nao para o daemon Docker local.
+#      No Minikube a imagem e construida dentro da VM (minikube docker-env) e
+#      fica visivel ao kubelet. No EKS cada node e uma instancia EC2 separada
+#      e so consegue obter a imagem a partir de um registro acessivel pela
+#      rede - dai o ECR.
+#   2. imagePullPolicy -> a Implantacao A usa "Never" justamente porque a
+#      imagem ja esta no daemon local. Aqui vale o padrao (IfNotPresent),
+#      pois a imagem PRECISA ser baixada do registro.
+#
+# O placeholder 312845823428.dkr.ecr.us-east-1.amazonaws.com/psi512-python-web:1.0 e substituido pelo script 00-build-push-ecr.sh,
+# que conhece o account ID e a regiao. Assim nenhum identificador de conta
+# fica versionado no repositorio.
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-web
+  labels:
+    app: python-web
+spec:
+  # Replicas iniciais. O HPA assume o controle deste campo assim que entra em
+  # regime, portanto este valor vale apenas para o primeiro instante apos o
+  # apply. Mantido em 2, como na Implantacao A.
+  replicas: 2
+  selector:
+    matchLabels:
+      app: python-web
+  template:
+    metadata:
+      labels:
+        app: python-web
+    spec:
+      containers:
+        - name: python-web
+          image: 312845823428.dkr.ecr.us-east-1.amazonaws.com/psi512-python-web:1.0
+          ports:
+            - containerPort: 8000
+          resources:
+            # requests.cpu e o denominador do calculo do HPA: uma utilizacao de
+            # 100% significa consumo igual a 50m, e nao 100% de um core. Com
+            # target de 10% o gatilho ocorre em apenas 5m de CPU por Pod, o que
+            # torna o escalonamento muito sensivel - escolha deliberada da
+            # Implantacao A para tornar o efeito visivel em poucos segundos.
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            # limits.cpu limita cada Pod a 250m (1/4 de core). E o teto que faz
+            # a carga se distribuir entre replicas em vez de ser absorvida por
+            # um unico Pod.
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
+          # A Implantacao A nao define probes. Elas foram acrescentadas aqui
+          # porque no EKS o Service do tipo LoadBalancer so encaminha trafego
+          # para Pods prontos: sem readinessProbe o balanceador pode entregar
+          # requisicoes a um Pod recem-criado que ainda nao abriu a porta 8000,
+          # produzindo erros durante o proprio escalonamento que se quer medir.
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+# -----------------------------------------------------------------------------
+# HorizontalPodAutoscaler
+#
+# Identico ao da Implantacao A. Usa a API autoscaling/v2, que permite metricas
+# multiplas e politicas de comportamento; aqui apenas CPU e utilizada.
+#
+# O HPA depende do metrics-server. No Minikube ele e habilitado com um addon
+# ("minikube addons enable metrics-server"); no EKS ele NAO vem instalado e
+# precisa ser aplicado explicitamente - ver 02-metrics-server.sh. Sem ele o
+# HPA reporta "<unknown>/10%" e nunca escala.
+# -----------------------------------------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: python-web-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: python-web
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          # Percentual sobre requests.cpu (50m), nao sobre a capacidade do node.
+          averageUtilization: 10

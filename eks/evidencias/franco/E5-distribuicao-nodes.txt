@@ -1,0 +1,6 @@
+NAME                          READY   STATUS    RESTARTS   AGE     IP               NODE                            NOMINATED NODE   READINESS GATES
+python-web-7f6f9569f8-7jpg5   1/1     Running   0          3m55s   192.168.39.98    ip-192-168-32-23.ec2.internal   <none>           <none>
+python-web-7f6f9569f8-9dwfj   1/1     Running   0          3m55s   192.168.26.61    ip-192-168-13-8.ec2.internal    <none>           <none>
+python-web-7f6f9569f8-fpck8   1/1     Running   0          6m56s   192.168.5.76     ip-192-168-13-8.ec2.internal    <none>           <none>
+python-web-7f6f9569f8-vlc59   1/1     Running   0          6m56s   192.168.36.201   ip-192-168-32-23.ec2.internal   <none>           <none>
+python-web-7f6f9569f8-w4ggf   1/1     Running   0          3m40s   192.168.6.62     ip-192-168-13-8.ec2.internal    <none>           <none>

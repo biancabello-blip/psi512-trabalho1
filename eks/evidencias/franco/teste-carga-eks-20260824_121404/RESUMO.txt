@@ -1,0 +1,26 @@
+=== RESUMO - ambiente: eks ===
+Fases ......................: repouso 60s | carga 300s
+Geradores de carga .........: 2
+
+Replicas na linha de base ..........: 2
+CPU maxima observada ...............: 385% do request
+Replicas maximas decididas pelo HPA : 5
+Pods prontos no pico ...............: 5
+
+-- Subida (referencia: inicio da carga) --
+Decisao de expandir ................: 35 s
+Decisao de ir ao maximo ............: 52 s
+Pods prontos no maximo .............: 52 s
+  -> custo do substrato (prontos - decisao): < 5 s (abaixo da resolucao de amostragem)
+
+-- Descida (referencia: remocao da carga) --
+Decisao de reduzir .................: 361 s
+
+Estado na ultima amostra ...........: 1 replicas decididas, 1 Pods ainda prontos
+  (Pods em Terminating continuam prontos por alguns segundos apos a decisao de reduzir)
+
+Nodes ............: 2
+Inicio (UTC) .....: 2026-08-24T15:14:06Z
+
+Arquivos: metricas.csv (serie temporal) | hpa-describe.txt (motivos)
+          hpa-watch.log | pods-watch.log | eventos.log | estado-*.txt

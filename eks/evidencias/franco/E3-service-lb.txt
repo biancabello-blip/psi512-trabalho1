@@ -1,0 +1,23 @@
+Name:                     python-web
+Namespace:                default
+Labels:                   app=python-web
+Annotations:              <none>
+Selector:                 app=python-web
+Type:                     LoadBalancer
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.100.41.43
+IPs:                      10.100.41.43
+LoadBalancer Ingress:     a4d126d13748e4d9eb3add4ee79d2d62-83205619.us-east-1.elb.amazonaws.com
+Port:                     http  80/TCP
+TargetPort:               8000/TCP
+NodePort:                 http  30145/TCP
+Endpoints:                192.168.5.76:8000,192.168.36.201:8000
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Internal Traffic Policy:  Cluster
+Events:
+  Type    Reason                Age   From                Message
+  ----    ------                ----  ----                -------
+  Normal  EnsuringLoadBalancer  10s   service-controller  Ensuring load balancer
+  Normal  EnsuredLoadBalancer   7s    service-controller  Ensured load balancer

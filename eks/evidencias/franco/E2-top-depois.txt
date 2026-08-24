@@ -1,0 +1,21 @@
+Origem do metrics-server: addon gerenciado pela AWS
+
+--- APIService metrics.k8s.io ---
+NAME                     SERVICE                      AVAILABLE   AGE
+v1beta1.metrics.k8s.io   kube-system/metrics-server   True        2m
+
+--- kubectl top nodes ---
+NAME                            CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)   
+ip-192-168-13-8.ec2.internal    38m          1%       415Mi           12%         
+ip-192-168-32-23.ec2.internal   37m          1%       447Mi           13%         
+
+--- kubectl top pods ---
+NAMESPACE     NAME                             CPU(cores)   MEMORY(bytes)   
+kube-system   aws-node-8njwx                   4m           54Mi            
+kube-system   aws-node-kjftp                   4m           37Mi            
+kube-system   coredns-857cbb5598-b9d9v         2m           11Mi            
+kube-system   coredns-857cbb5598-hwrkf         2m           11Mi            
+kube-system   kube-proxy-6nhgb                 1m           12Mi            
+kube-system   kube-proxy-cq6sw                 1m           11Mi            
+kube-system   metrics-server-dfb8868d7-9g2k8   3m           15Mi            
+kube-system   metrics-server-dfb8868d7-w6ljh   4m           15Mi            

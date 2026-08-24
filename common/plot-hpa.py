@@ -78,10 +78,14 @@ def main():
         rotulo = Path(arquivo).parent.name.replace("teste-carga-", "")
         desenhar(ax, t, cpu, rep, prontos, alvo, rotulo, *cores[i % 2])
 
-    # Folga no topo do eixo de CPU para a legenda nao cobrir a curva.
-    picos = [v for v in ax.get_lines()[0].get_ydata() if v is not None]
+    # Folga no topo do eixo de CPU para a legenda nao cobrir as curvas. O
+    # maximo e tomado sobre TODAS as series: no modo comparativo os dois
+    # ambientes tem picos diferentes, e limitar pelo primeiro cortaria o pico
+    # do segundo - foi o que aconteceu na primeira versao deste script.
+    picos = [v for linha in ax.get_lines() for v in linha.get_ydata()
+             if v is not None]
     if picos:
-        ax.set_ylim(0, max(picos) * 1.45)
+        ax.set_ylim(0, max(picos) * 1.35)
 
     ax.set_xlabel("tempo desde o início do experimento (min)")
     ax.set_ylabel("CPU (% do request)")
@@ -91,9 +95,13 @@ def main():
 
     linhas = ax.get_legend_handles_labels()[0] + ax._psi_twin.get_legend_handles_labels()[0]
     nomes = ax.get_legend_handles_labels()[1] + ax._psi_twin.get_legend_handles_labels()[1]
-    ax.legend(linhas, nomes, fontsize=8, loc="upper left", framealpha=0.9)
+    # Legenda FORA da area de plotagem. Dentro dela, no modo comparativo, a
+    # caixa cobre a linha de replicas no maximo, que fica justamente no topo
+    # do eixo direito.
+    fig.legend(linhas, nomes, fontsize=7.5, loc="lower center",
+               ncol=3, frameon=False, bbox_to_anchor=(0.5, -0.02))
 
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0.14, 1, 1))
     fig.savefig(saida, dpi=150)
     print(f"gráfico salvo em {saida}")
 

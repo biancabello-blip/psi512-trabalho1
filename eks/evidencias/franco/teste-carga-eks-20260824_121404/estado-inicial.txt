@@ -1,0 +1,13 @@
+NAME                                                 REFERENCE               TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/python-web-hpa   Deployment/python-web   cpu: 2%/10%   1         5         2          89s
+
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                                               SELECTOR
+deployment.apps/python-web   2/2     2            2           89s   python-web   312845823428.dkr.ecr.us-east-1.amazonaws.com/psi512-python-web:1.0   app=python-web
+
+NAME                              READY   STATUS    RESTARTS   AGE   IP               NODE                            NOMINATED NODE   READINESS GATES
+pod/python-web-7f6f9569f8-fpck8   1/1     Running   0          90s   192.168.5.76     ip-192-168-13-8.ec2.internal    <none>           <none>
+pod/python-web-7f6f9569f8-vlc59   1/1     Running   0          90s   192.168.36.201   ip-192-168-32-23.ec2.internal   <none>           <none>
+
+NAME                                 STATUS   ROLES    AGE     VERSION               INTERNAL-IP     EXTERNAL-IP    OS-IMAGE                        KERNEL-VERSION                     CONTAINER-RUNTIME
+node/ip-192-168-13-8.ec2.internal    Ready    <none>   6m12s   v1.34.9-eks-b3f9404   192.168.13.8    54.224.246.2   Amazon Linux 2023.12.20260817   6.12.100-125.179.amzn2023.x86_64   containerd://2.2.5+unknown
+node/ip-192-168-32-23.ec2.internal   Ready    <none>   6m26s   v1.34.9-eks-b3f9404   192.168.32.23   98.93.91.59    Amazon Linux 2023.12.20260817   6.12.100-125.179.amzn2023.x86_64   containerd://2.2.5+unknown

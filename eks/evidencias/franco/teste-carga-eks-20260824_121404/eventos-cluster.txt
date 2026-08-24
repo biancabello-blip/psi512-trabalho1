@@ -1,0 +1,60 @@
+14m         Normal    EnsuringLoadBalancer           service/python-web                       Ensuring load balancer
+14m         Normal    Pulled                         pod/python-web-7f6f9569f8-fpck8          Successfully pulled image "312845823428.dkr.ecr.us-east-1.amazonaws.com/psi512-python-web:1.0" in 1.355s (1.355s including waiting). Image size: 18031869 bytes.
+14m         Normal    Created                        pod/python-web-7f6f9569f8-vlc59          Created container: python-web
+14m         Normal    Pulled                         pod/python-web-7f6f9569f8-vlc59          Successfully pulled image "312845823428.dkr.ecr.us-east-1.amazonaws.com/psi512-python-web:1.0" in 1.687s (1.687s including waiting). Image size: 18031869 bytes.
+14m         Normal    Started                        pod/python-web-7f6f9569f8-vlc59          Started container python-web
+14m         Normal    Started                        pod/python-web-7f6f9569f8-fpck8          Started container python-web
+14m         Normal    EnsuredLoadBalancer            service/python-web                       Ensured load balancer
+14m         Warning   FailedGetResourceMetric        horizontalpodautoscaler/python-web-hpa   failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+14m         Warning   FailedComputeMetricsReplicas   horizontalpodautoscaler/python-web-hpa   invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+14m         Warning   FailedComputeMetricsReplicas   horizontalpodautoscaler/python-web-hpa   invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+14m         Warning   FailedGetResourceMetric        horizontalpodautoscaler/python-web-hpa   failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+12m         Normal    ScalingReplicaSet              deployment/load-generator                Scaled up replica set load-generator-5b47bfb48b from 0 to 1
+12m         Normal    Scheduled                      pod/load-generator-5b47bfb48b-k5s9x      Successfully assigned default/load-generator-5b47bfb48b-k5s9x to ip-192-168-13-8.ec2.internal
+12m         Normal    SuccessfulCreate               replicaset/load-generator-5b47bfb48b     Created pod: load-generator-5b47bfb48b-k5s9x
+12m         Normal    Pulling                        pod/load-generator-5b47bfb48b-k5s9x      Pulling image "busybox:1.36"
+12m         Normal    Started                        pod/load-generator-5b47bfb48b-k5s9x      Started container load-generator
+12m         Normal    Pulling                        pod/load-generator-5b47bfb48b-s4f72      Pulling image "busybox:1.36"
+12m         Normal    Scheduled                      pod/load-generator-5b47bfb48b-s4f72      Successfully assigned default/load-generator-5b47bfb48b-s4f72 to ip-192-168-32-23.ec2.internal
+12m         Normal    ScalingReplicaSet              deployment/load-generator                Scaled up replica set load-generator-5b47bfb48b from 1 to 2
+12m         Normal    Created                        pod/load-generator-5b47bfb48b-k5s9x      Created container: load-generator
+12m         Normal    Pulled                         pod/load-generator-5b47bfb48b-k5s9x      Successfully pulled image "busybox:1.36" in 579ms (579ms including waiting). Image size: 2217006 bytes.
+12m         Normal    SuccessfulCreate               replicaset/load-generator-5b47bfb48b     Created pod: load-generator-5b47bfb48b-s4f72
+12m         Normal    Created                        pod/load-generator-5b47bfb48b-s4f72      Created container: load-generator
+12m         Normal    Pulled                         pod/load-generator-5b47bfb48b-s4f72      Successfully pulled image "busybox:1.36" in 565ms (565ms including waiting). Image size: 2217006 bytes.
+12m         Normal    Started                        pod/load-generator-5b47bfb48b-s4f72      Started container load-generator
+11m         Normal    Created                        pod/python-web-7f6f9569f8-9dwfj          Created container: python-web
+11m         Normal    SuccessfulRescale              horizontalpodautoscaler/python-web-hpa   New size: 4; reason: cpu resource utilization (percentage of request) above target
+11m         Normal    ScalingReplicaSet              deployment/python-web                    Scaled up replica set python-web-7f6f9569f8 from 2 to 4
+11m         Normal    SuccessfulCreate               replicaset/python-web-7f6f9569f8         Created pod: python-web-7f6f9569f8-9dwfj
+11m         Normal    Started                        pod/python-web-7f6f9569f8-9dwfj          Started container python-web
+11m         Normal    Pulled                         pod/python-web-7f6f9569f8-9dwfj          Container image "312845823428.dkr.ecr.us-east-1.amazonaws.com/psi512-python-web:1.0" already present on machine
+11m         Normal    Scheduled                      pod/python-web-7f6f9569f8-7jpg5          Successfully assigned default/python-web-7f6f9569f8-7jpg5 to ip-192-168-32-23.ec2.internal
+11m         Normal    SuccessfulCreate               replicaset/python-web-7f6f9569f8         Created pod: python-web-7f6f9569f8-7jpg5
+11m         Normal    Pulled                         pod/python-web-7f6f9569f8-7jpg5          Container image "312845823428.dkr.ecr.us-east-1.amazonaws.com/psi512-python-web:1.0" already present on machine
+11m         Normal    Created                        pod/python-web-7f6f9569f8-7jpg5          Created container: python-web
+11m         Normal    Started                        pod/python-web-7f6f9569f8-7jpg5          Started container python-web
+11m         Normal    Scheduled                      pod/python-web-7f6f9569f8-9dwfj          Successfully assigned default/python-web-7f6f9569f8-9dwfj to ip-192-168-13-8.ec2.internal
+11m         Warning   Unhealthy                      pod/python-web-7f6f9569f8-7jpg5          Readiness probe failed: Get "http://192.168.39.98:8000/": dial tcp 192.168.39.98:8000: connect: connection refused
+11m         Warning   Unhealthy                      pod/python-web-7f6f9569f8-9dwfj          Readiness probe failed: Get "http://192.168.26.61:8000/": dial tcp 192.168.26.61:8000: connect: connection refused
+11m         Normal    SuccessfulRescale              horizontalpodautoscaler/python-web-hpa   New size: 5; reason: cpu resource utilization (percentage of request) above target
+11m         Normal    Pulled                         pod/python-web-7f6f9569f8-w4ggf          Container image "312845823428.dkr.ecr.us-east-1.amazonaws.com/psi512-python-web:1.0" already present on machine
+11m         Normal    ScalingReplicaSet              deployment/python-web                    Scaled up replica set python-web-7f6f9569f8 from 4 to 5
+11m         Normal    SuccessfulCreate               replicaset/python-web-7f6f9569f8         Created pod: python-web-7f6f9569f8-w4ggf
+11m         Normal    Scheduled                      pod/python-web-7f6f9569f8-w4ggf          Successfully assigned default/python-web-7f6f9569f8-w4ggf to ip-192-168-13-8.ec2.internal
+11m         Normal    Created                        pod/python-web-7f6f9569f8-w4ggf          Created container: python-web
+11m         Normal    Started                        pod/python-web-7f6f9569f8-w4ggf          Started container python-web
+7m5s        Normal    Killing                        pod/load-generator-5b47bfb48b-k5s9x      Stopping container load-generator
+7m5s        Normal    Killing                        pod/load-generator-5b47bfb48b-s4f72      Stopping container load-generator
+68s         Normal    Killing                        pod/python-web-7f6f9569f8-fpck8          Stopping container python-web
+68s         Normal    SuccessfulRescale              horizontalpodautoscaler/python-web-hpa   New size: 3; reason: All metrics below target
+68s         Normal    SuccessfulDelete               replicaset/python-web-7f6f9569f8         Deleted pod: python-web-7f6f9569f8-fpck8
+68s         Normal    Killing                        pod/python-web-7f6f9569f8-9dwfj          Stopping container python-web
+68s         Normal    SuccessfulDelete               replicaset/python-web-7f6f9569f8         Deleted pod: python-web-7f6f9569f8-9dwfj
+68s         Normal    ScalingReplicaSet              deployment/python-web                    Scaled down replica set python-web-7f6f9569f8 from 5 to 3
+53s         Normal    Killing                        pod/python-web-7f6f9569f8-7jpg5          Stopping container python-web
+53s         Normal    SuccessfulDelete               replicaset/python-web-7f6f9569f8         Deleted pod: python-web-7f6f9569f8-vlc59
+53s         Normal    SuccessfulRescale              horizontalpodautoscaler/python-web-hpa   New size: 1; reason: All metrics below target
+53s         Normal    Killing                        pod/python-web-7f6f9569f8-vlc59          Stopping container python-web
+53s         Normal    SuccessfulDelete               replicaset/python-web-7f6f9569f8         Deleted pod: python-web-7f6f9569f8-7jpg5
+53s         Normal    ScalingReplicaSet              deployment/python-web                    Scaled down replica set python-web-7f6f9569f8 from 3 to 1

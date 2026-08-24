@@ -1,0 +1,22 @@
+URL: http://a4d126d13748e4d9eb3add4ee79d2d62-83205619.us-east-1.elb.amazonaws.com/
+Coleta em 2026-08-24T15:13:54Z
+---
+HTTP/1.0 200 OK
+Server: SimpleHTTP/0.6 Python/3.12.14
+Date: Mon, 24 Aug 2026 15:13:54 GMT
+Content-type: text/html
+Content-Length: 333
+Last-Modified: Sun, 23 Aug 2026 20:59:19 GMT
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidor Python</title>
+</head>
+<body>
+    <h1>Olá, mundo!</h1>
+    <p>Esta página está sendo servida por Python dentro de um container Docker.</p>
+</body>
+</html>
